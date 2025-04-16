@@ -1,0 +1,29 @@
+# Core dependencies
+langchain>=0.1.0
+langgraph>=0.0.25
+streamlit>=1.32.0
+streamlit-extras>=0.3.5
+streamlit-agraph>=0.0.44
+pydantic>=2.5.0
+python-dotenv>=1.0.0
+
+ollama>=0.1.5
+langchain-community>=0.0.20 
+
+# Search tools
+google-search-results>=2.4.2  # SerpAPI
+langchain_openai>=0.0.3
+duckduckgo-search>=4.1.1  # DuckDuckGo search
+tavily-python>=0.2.6  # Tavily search API
+arxiv>=2.0.0
+scholarly>=1.7.0  # For Google Scholar
+pytube>=15.0.0  # For YouTube
+tweepy>=4.14.0  # For Twitter
+linkedin-api>=1.1.1  # For LinkedIn
+
+# Utilities
+beautifulsoup4>=4.12.2
+requests>=2.31.0
+validators>=0.22.0
+pillow>=10.1.0
+PyMuPDF>=1.18.0
