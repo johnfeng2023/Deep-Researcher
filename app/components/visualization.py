@@ -4,6 +4,7 @@ from streamlit.delta_generator import DeltaGenerator
 import streamlit.components.v1 as components
 import pandas as pd
 import json
+import re
 
 from app.utils.visualization import research_state_to_mermaid
 
@@ -62,30 +63,10 @@ def render_execution_steps(state: Dict[str, Any]) -> None:
     search_logs = state.get("search_logs", [])
     
     if search_logs:
-        st.subheader("Research Steps")
+        st.subheader("More Details")
         
         # Create tabs for overview and detailed results
-        overview_tab, details_tab = st.tabs(["Overview", "Detailed Results"])
-        
-        with overview_tab:
-            steps_data = []
-            for i, log in enumerate(search_logs, 1):
-                source = log["source"].capitalize()
-                results_text = log["results"]
-                num_results = len(log.get("links", [])) if "links" in log else 0
-                
-                steps_data.append({
-                    "Step": i,
-                    "Source": source,
-                    "Query": log["query"][:50] + ("..." if len(log["query"]) > 50 else ""),
-                    "Results Found": f"{num_results} items" if num_results > 0 else "See details",
-                })
-            
-            st.dataframe(
-                pd.DataFrame(steps_data),
-                use_container_width=True,
-                hide_index=True
-            )
+        details_tab, overview_tab = st.tabs(["Detailed Results", "Steps Overview"])
         
         with details_tab:
             for i, log in enumerate(search_logs, 1):
@@ -128,8 +109,56 @@ def render_execution_steps(state: Dict[str, Any]) -> None:
                                         st.markdown(abstract)
                             
                             st.markdown("---")
+                    # For web search results, show structured results with links
+                    elif log["source"] == "web":
+                        results_text = log["results"]
+                        sections = results_text.split("###")[1:]  # Split by headers, skip first empty section
+                        
+                        for section in sections:
+                            if not section.strip():
+                                continue
+                                
+                            lines = section.strip().split("\n")
+                            if len(lines) >= 2:
+                                title = lines[0].strip()
+                                link_line = lines[1].strip()
+                                snippet = "\n".join(lines[2:]).strip()
+                                
+                                # Extract URL from markdown link format
+                                url_match = re.search(r'\[(.*?)\]\((.*?)\)', link_line)
+                                if url_match:
+                                    url = url_match.group(2)
+                                    
+                                    # Display with title, link button, and snippet
+                                    st.markdown(f"**{title}**")
+                                    col1, col2 = st.columns([3, 1])
+                                    with col1:
+                                        st.markdown(snippet)
+                                    with col2:
+                                        st.markdown(f"[🔗 Visit Site]({url})")
+                                    st.markdown("---")
                     else:
                         # For other sources, show formatted results
                         st.markdown(log["results"])
+        
+        with overview_tab:
+            steps_data = []
+            for i, log in enumerate(search_logs, 1):
+                source = log["source"].capitalize()
+                results_text = log["results"]
+                num_results = len(log.get("links", [])) if "links" in log else 0
+                
+                steps_data.append({
+                    "Step": i,
+                    "Source": source,
+                    "Query": log["query"][:50] + ("..." if len(log["query"]) > 50 else ""),
+                    "Results Found": f"{num_results} items" if num_results > 0 else "See details",
+                })
+            
+            st.dataframe(
+                pd.DataFrame(steps_data),
+                use_container_width=True,
+                hide_index=True
+            )
     else:
         st.info("No execution steps available.") 
