@@ -1,0 +1,15 @@
+.qodo
+venv/
+.env
+.venv
+INSTALLATION.md
+debug_ollama.py
+.DS_Store
+__pycache__/
+/app/__pycache__/
+/app/components/__pycache__/
+/app/models/__pycache__/
+/app/utils/__pycache__/
+/app/components/visualization/__pycache__/
+
+
