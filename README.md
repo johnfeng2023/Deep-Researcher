@@ -49,7 +49,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 ollama pull gemma3:1b
 ```
 
-4. Create a `.env` file in the root directory with your API keys (see `.env.example`).
+5. Create a `.env` file in the root directory with your API keys (see `.env.example`).
 
 ## Usage
 
