@@ -39,6 +39,9 @@ def send_research_email(
     msg["From"] = sender
     msg["To"] = recipient_email
     
+    # Format HTML-friendly research result
+    formatted_result = research_result.replace("\n", "<br/>")
+    
     # Create HTML content
     html = f"""
     <html>
@@ -62,7 +65,7 @@ def send_research_email(
             
             <h2>Research Findings:</h2>
             <div class="results">
-                <p>{research_result.replace('\n', '<br/>')}</p>
+                <p>{formatted_result}</p>
             </div>
             
             <div class="footer">
@@ -96,4 +99,4 @@ def send_research_email(
         return {
             "status": "error",
             "message": f"Failed to send email: {str(e)}"
-        } 
+        }
