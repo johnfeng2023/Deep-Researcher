@@ -86,7 +86,7 @@ def render_sidebar() -> Dict[str, bool]:
         - Ollama (gemma3:1b)
         - Streamlit
         
-        [View on GitHub](https://github.com/yourusername/Deep-Researcher)
+        [View on GitHub](https://github.com/Sallyliubj/Deep-Researcher)
         """)
     
     # Return the search configuration
