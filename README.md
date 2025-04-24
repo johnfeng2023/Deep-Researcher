@@ -29,12 +29,18 @@ git clone https://github.com/Sallyliubj/Deep-Researcher.git
 cd Deep-Researcher
 ```
 
-2. Install required dependencies:
+2. Create and activate a virtual environment:
+```bash
+python - m venv .venv
+source .venv/bin/activate
+```
+
+3. Install required dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Set up Ollama locally for the LLM:
+4. Set up Ollama locally for the LLM:
 ```bash
 # Install Ollama if not already installed
 curl -fsSL https://ollama.com/install.sh | sh
@@ -49,6 +55,7 @@ ollama pull gemma3:1b
 
 1. Start the Streamlit app:
 ```bash
+export PYTHONPATH=$(pwd)
 streamlit run app/main.py
 ```
 Or use the provided shell script:
