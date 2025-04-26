@@ -21,6 +21,10 @@ pytube>=15.0.0  # For YouTube
 tweepy>=4.14.0  # For Twitter
 linkedin-api>=1.1.1  # For LinkedIn
 
+# RAG dependencies
+sentence-transformers>=2.2.2
+faiss-cpu>=1.7.4
+
 # Utilities
 beautifulsoup4>=4.12.2
 requests>=2.31.0

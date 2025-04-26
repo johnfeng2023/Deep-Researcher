@@ -22,6 +22,13 @@ class SearchConfig(BaseModel):
     # Web search engine selection
     web_search_config: WebSearchConfig = WebSearchConfig()
 
+class RAGConfig(BaseModel):
+    enabled: bool = Field(default=True, description="Enable RAG functionality")
+    embedding_model: str = Field(default="all-MiniLM-L6-v2", description="HuggingFace embedding model to use")
+    chunk_size: int = Field(default=1000, description="Size of document chunks")
+    chunk_overlap: int = Field(default=200, description="Overlap between document chunks")
+    retrieval_k: int = Field(default=5, description="Number of documents to retrieve")
+
 class EmailConfig(BaseModel):
     username: str = Field(default_factory=lambda: os.getenv("EMAIL_USERNAME", ""))
     password: str = Field(default_factory=lambda: os.getenv("EMAIL_PASSWORD", ""))
@@ -45,6 +52,9 @@ class Config(BaseModel):
     
     # Search Configuration
     search_config: SearchConfig = SearchConfig()
+    
+    # RAG Configuration
+    rag_config: RAGConfig = RAGConfig()
     
     # Email Configuration
     email_config: EmailConfig = EmailConfig()
@@ -89,6 +99,11 @@ class Config(BaseModel):
                 engine_key = key.replace("web_search_config_", "")
                 if hasattr(self.search_config.web_search_config, engine_key):
                     setattr(self.search_config.web_search_config, engine_key, value)
+            elif key.startswith("rag_config_"):
+                # Handle RAG configuration
+                rag_key = key.replace("rag_config_", "")
+                if hasattr(self.rag_config, rag_key):
+                    setattr(self.rag_config, rag_key, value)
             elif hasattr(self.search_config, key):
                 # Handle regular search options
                 setattr(self.search_config, key, value)
