@@ -53,7 +53,6 @@ st.markdown(
         padding: 2rem 1rem;
         margin: 0 auto;
         box-sizing: border-box;
-        padding-bottom: 6rem !important;  /* Add padding for footer */
     }
 
     /* Form container styles */
@@ -131,21 +130,9 @@ st.markdown(
         width: 100%;
     }
 
-    /* Footer styles */
-    footer {
-        position: relative !important;
-        margin-top: 2rem !important;
-        visibility: visible !important;
-    }
-
+    /* Add padding at the bottom to prevent content from being hidden behind the footer */
     .main .block-container {
-        padding-bottom: 5rem;
-    }
-
-    /* Ensure footer text is visible */
-    [data-testid="stMarkdownContainer"] {
-        opacity: 1 !important;
-        visibility: visible !important;
+        padding-bottom: 5rem !important;
     }
     </style>
     """,
@@ -297,8 +284,10 @@ if st.session_state.research_state and st.session_state.research_state.get("fina
 st.markdown("---")
 st.markdown(
     """
-    <div style="text-align: center; color: #888; padding: 20px 0; margin-top: 30px; border-top: 1px solid #eee; position: relative; z-index: 1000;">
-    Built using LangChain, LangGraph, and Streamlit
+    <div style="position: fixed; bottom: 0; left: 0; right: 0; background-color: white; padding: 1rem; text-align: center; border-top: 1px solid #eee;">
+        <p style="color: #888; margin: 0;">
+            Built using LangChain, LangGraph, and Streamlit
+        </p>
     </div>
     """,
     unsafe_allow_html=True

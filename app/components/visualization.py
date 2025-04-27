@@ -69,6 +69,7 @@ def render_execution_steps(state: Dict[str, Any]) -> None:
         details_tab, overview_tab = st.tabs(["Detailed Results", "Steps Overview"])
         
         with details_tab:
+            # Ensure we start with index 1 for display
             for i, log in enumerate(search_logs, 1):
                 source = log["source"].capitalize()
                 with st.expander(f"Step {i}: {source} Search Results"):
@@ -112,7 +113,9 @@ def render_execution_steps(state: Dict[str, Any]) -> None:
                     # For web search results, show structured results with links
                     elif log["source"] == "web":
                         results_text = log["results"]
-                        sections = results_text.split("###")[1:]  # Split by headers, skip first empty section
+                        # Remove the header if it exists to avoid duplication
+                        results_text = results_text.replace("## Web Search Results\n\n", "")
+                        sections = results_text.split("###")[1:] if "###" in results_text else [results_text]
                         
                         for section in sections:
                             if not section.strip():
@@ -137,6 +140,9 @@ def render_execution_steps(state: Dict[str, Any]) -> None:
                                     with col2:
                                         st.markdown(f"[🔗 Visit Site]({url})")
                                     st.markdown("---")
+                            else:
+                                # If the section doesn't match the expected format, display as is
+                                st.markdown(section)
                     else:
                         # For other sources, show formatted results
                         st.markdown(log["results"])
