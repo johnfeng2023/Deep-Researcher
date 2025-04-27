@@ -1,6 +1,10 @@
 import os
 import streamlit as st
+import sys
 from typing import Dict, Any, Optional, List
+
+# Add project root to Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app.utils.config import config
 from app.models.research_agent import run_research_agent
@@ -9,7 +13,7 @@ from app.components.sidebar import render_sidebar
 from app.components.document_upload import render_document_upload
 from app.components.document_manager import render_document_manager
 from app.components.visualization import render_graph_visualization
-from app.components.email_sender import render_email_form
+from components.email_sender import render_email_form
 
 # Page configuration
 st.set_page_config(

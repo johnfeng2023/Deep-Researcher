@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from typing import List, Dict, Any, Optional, Tuple
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -29,9 +29,12 @@ class RAGSystem:
         self.collection_name = collection_name
         self.vector_db_path = os.path.join(VECTOR_DB_DIR, collection_name)
         
-        # Initialize the embedding model (using SentenceTransformers)
+        # IMPORTANT: Use exactly the same model name as in fix_vector_store.py
+        model_name = "all-MiniLM-L6-v2"
+        
+        # Initialize the embedding model with the exact same parameters
         self.embeddings = HuggingFaceEmbeddings(
-            model_name="all-MiniLM-L6-v2",  # A good balance of performance and speed
+            model_name=model_name,
             model_kwargs={"device": "cpu"},
             encode_kwargs={"normalize_embeddings": True}
         )
@@ -46,7 +49,8 @@ class RAGSystem:
             try:
                 self.vector_store = FAISS.load_local(
                     self.vector_db_path, 
-                    self.embeddings
+                    self.embeddings,
+                    allow_dangerous_deserialization=True
                 )
                 print(f"Loaded existing vector store from {self.vector_db_path}")
             except Exception as e:
@@ -57,6 +61,12 @@ class RAGSystem:
     
     def _create_new_vector_store(self):
         """Create a new vector store."""
+        # Get the embedding dimensions without using .shape
+        test_embedding = self.embeddings.embed_query("test")
+        embedding_dim = len(test_embedding) if isinstance(test_embedding, list) else test_embedding.shape[0]
+        print("Creating new vector store with embedding dimension:", embedding_dim)
+        
+        # Create an empty document with a simple test text
         self.vector_store = FAISS.from_documents(
             documents=[Document(page_content="Initialization document", metadata={})],
             embedding=self.embeddings
@@ -65,46 +75,54 @@ class RAGSystem:
         print(f"Created new vector store at {self.vector_db_path}")
     
     def add_document(self, file_path: str, metadata: Optional[Dict[str, Any]] = None) -> int:
-        """
-        Process a document and add its content to the vector store.
-        
-        Args:
-            file_path: Path to the document file
-            metadata: Additional metadata to store with the document
-            
-        Returns:
-            Number of chunks added to the vector store
-        """
+        """Process a document and add its content to the vector store."""
         if metadata is None:
             metadata = {}
         
-        # Extract text from the document
-        text = extract_text_from_file(file_path)
-        
-        # Add file information to metadata
-        file_metadata = {
-            "source": os.path.basename(file_path),
-            "file_path": file_path,
-            "file_type": os.path.splitext(file_path)[1].lower(),
-            **metadata
-        }
-        
-        # Chunk the document
-        chunks = chunk_document(text)
-        
-        # Create Document objects with metadata
-        documents = [
-            Document(page_content=chunk, metadata=file_metadata)
-            for chunk in chunks
-        ]
-        
-        # Add to vector store
-        self.vector_store.add_documents(documents)
-        
-        # Save updated vector store
-        self.vector_store.save_local(self.vector_db_path)
-        
-        return len(chunks)
+        try:
+            # Extract text from the document
+            print(f"Extracting text from: {file_path}")
+            text = extract_text_from_file(file_path)
+            print(f"Extracted text length: {len(text)}")
+            print(f"Text preview: {text[:100]}...")  # Print a preview
+            
+            # Add file information to metadata
+            file_metadata = {
+                "source": os.path.basename(file_path),
+                "file_path": file_path,
+                "file_type": os.path.splitext(file_path)[1].lower(),
+                **metadata
+            }
+            
+            # Chunk the document
+            chunks = chunk_document(text)
+            print(f"Created {len(chunks)} chunks")
+            
+            if not chunks:
+                print("WARNING: No chunks created. Text might be too short.")
+                # Create at least one chunk with the available text
+                if text.strip():
+                    chunks = [text]
+                    print("Created a single chunk with all text")
+            
+            # Create Document objects with metadata
+            documents = [
+                Document(page_content=chunk, metadata=file_metadata)
+                for chunk in chunks
+            ]
+            
+            # Add to vector store
+            self.vector_store.add_documents(documents)
+            
+            # Save updated vector store
+            self.vector_store.save_local(self.vector_db_path)
+            
+            return len(chunks)
+        except Exception as e:
+            import traceback
+            print(f"Error processing document: {e}")
+            print(traceback.format_exc())  # Print full stack trace
+            return 0
     
     def add_text(self, text: str, metadata: Optional[Dict[str, Any]] = None) -> int:
         """
@@ -148,7 +166,12 @@ class RAGSystem:
         Returns:
             List of retrieved documents
         """
-        return self.vector_store.similarity_search(query, k=k)
+        print(f"Query: {query}")
+        docs = self.vector_store.similarity_search(query, k=k)
+        print(f"Found {len(docs)} relevant documents")
+        for i, doc in enumerate(docs):
+            print(f"Doc {i} source: {doc.metadata.get('source', 'unknown')}")
+        return docs
     
     def retrieve_with_scores(self, query: str, k: int = 5) -> List[Tuple[Document, float]]:
         """
