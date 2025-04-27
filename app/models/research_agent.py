@@ -170,43 +170,40 @@ def process_youtube_search(state: ResearchState) -> ResearchState:
     """Execute YouTube search and update the state."""
     search_query = state["question"]
     search_result = youtube_search.run(search_query)
-    
-    # Extract video information
+
+    # Extract video information from the formatted string
     videos = []
     current_video = {}
-    
-    # Process the search results
     for line in search_result.split('\n'):
         line = line.strip()
         if not line:
-            if current_video and all(k in current_video for k in ['title', 'url']):
+            if current_video and all(k in current_video for k in ['title', 'link']):
                 videos.append(current_video.copy())
             current_video = {}
         elif line.startswith('Title:'):
             current_video['title'] = line[6:].strip()
         elif line.startswith('URL:'):
-            current_video['url'] = line[4:].strip()
+            current_video['link'] = line[4:].strip()
         elif line.startswith('Description:'):
             current_video['description'] = line[12:].strip()
-    
     # Add the last video if it exists
-    if current_video and all(k in current_video for k in ['title', 'url']):
+    if current_video and all(k in current_video for k in ['title', 'link']):
         videos.append(current_video)
-    
+
     # Format YouTube results with embedded videos
     formatted_result = "## Related Videos\n\n"
     if videos:
         for video in videos:
             formatted_result += f"### {video['title']}\n\n"
             # Extract video ID and create embedded player
-            video_id = video['url'].split('v=')[-1].split('&')[0]  # Handle URLs with additional parameters
+            video_id = video['link'].split('v=')[-1].split('&')[0]  # Handle URLs with additional parameters
             formatted_result += f'<iframe width="560" height="315" src="https://www.youtube.com/embed/{video_id}" frameborder="0" allowfullscreen></iframe>\n\n'
             if video.get('description'):
                 formatted_result += f"{video['description']}\n\n"
             formatted_result += "---\n\n"
     else:
         formatted_result += "*No relevant videos found for this query.*\n\n"
-    
+
     # Add to search logs
     search_logs = state.get("search_logs", [])
     search_logs.append({
@@ -215,11 +212,11 @@ def process_youtube_search(state: ResearchState) -> ResearchState:
         "results": formatted_result,
         "links": videos
     })
-    
+
     # Update state
     current_answer = state.get("current_answer", "")
     current_answer += f"\n\n{formatted_result}"
-    
+
     return {
         **state,
         "search_logs": search_logs,

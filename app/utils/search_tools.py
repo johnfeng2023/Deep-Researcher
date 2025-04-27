@@ -161,10 +161,10 @@ def search_youtube(query: str, max_results: int = 3) -> List[Dict[str, str]]:
         results = []
         
         # Get the raw search results
-        raw_results = search.results()
+        raw_results = search.results
         if not raw_results:
             return results
-            
+        
         # Process each video, with better error handling
         for video in raw_results[:max_results]:
             try:
@@ -197,7 +197,7 @@ def search_youtube(query: str, max_results: int = 3) -> List[Dict[str, str]]:
             except (AttributeError, KeyError, IndexError) as e:
                 print(f"Error processing YouTube video: {str(e)}")
                 continue
-            
+        
         return results
         
     except Exception as e:

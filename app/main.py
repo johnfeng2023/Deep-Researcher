@@ -136,7 +136,10 @@ with tab2:
 if st.session_state.research_state and st.session_state.research_state.get("final_answer"):
     st.markdown("---")
     with st.expander("📧 Email Research Results"):
-        render_email_form(st.session_state.research_state.get("final_answer", ""))
+        render_email_form(
+            st.session_state.research_state.get("question", ""),
+            st.session_state.research_state.get("final_answer", "")
+        )
 
 # Footer
 st.markdown("---")
