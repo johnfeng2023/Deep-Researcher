@@ -108,27 +108,41 @@ def run_rag_agent(
     collection_name: str = "default"
 ) -> Tuple[str, Dict[str, Any]]:
     """
-    Run the RAG agent with a question.
+    Run the RAG-enhanced research agent to answer a question.
     
     Args:
-        question: The research question
+        question: The research question to answer
         collection_name: Name of the vector collection to use
         
     Returns:
-        Tuple of (answer, state)
+        Tuple of (final_answer, state)
     """
-    # Create the agent
-    agent = create_rag_agent(collection_name)
-    
-    # Initial state
-    initial_state: RAGState = {
-        "question": question,
-        "context": [],
-        "retrieved_docs": [],
-        "rag_answer": None
-    }
-    
-    # Run the agent
-    final_state = agent.invoke(initial_state)
-    
-    return final_state["rag_answer"], final_state 
+    try:
+        # Initialize RAG system only when this function is called
+        rag_system = RAGSystem(collection_name=collection_name)
+        
+        # Get relevant documents
+        docs = rag_system.get_relevant_documents(question)
+        
+        # Create initial state
+        initial_state = {
+            "question": question,
+            "search_logs": [],
+            "current_answer": "",
+            "final_answer": None,
+            "needs_more_research": True,
+            "next_search_strategy": "web_search",
+            "retrieved_docs": docs
+        }
+        
+        # Run regular research agent with RAG context
+        final_answer, state = run_research_agent(question=question)
+        
+        # Add retrieved documents to the state
+        state["retrieved_docs"] = docs
+        
+        return final_answer, state
+        
+    except Exception as e:
+        print(f"Error in RAG agent: {str(e)}")
+        return "An error occurred while processing your request with RAG.", {"error": str(e)} 

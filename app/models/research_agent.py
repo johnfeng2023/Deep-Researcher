@@ -66,18 +66,22 @@ def process_web_search(state: ResearchState) -> ResearchState:
     search_query = state["question"]
     search_result = web_search.run(search_query)
     
+    # Format web search results with clear section header
+    formatted_result = "## Web Search Results\n\n"
+    formatted_result += search_result
+    
     # Add to search logs
     search_logs = state.get("search_logs", [])
     search_logs.append({
         "source": "web",
         "query": search_query,
-        "results": search_result,
+        "results": formatted_result,
         "links": []  # Web search results are already processed
     })
     
     # Update state
     current_answer = state.get("current_answer", "")
-    current_answer += f"\n\n## Web Search Results\n{search_result}"
+    current_answer += f"\n\n{formatted_result}"
     
     return {
         **state,
@@ -421,10 +425,10 @@ def run_research_agent(
     # Compile the workflow into a runnable
     agent = workflow.compile()
     
-    # Set initial state
+    # Set initial state with empty search logs
     initial_state: ResearchState = {
         "question": question,
-        "search_logs": [],
+        "search_logs": [],  # Start with empty search logs
         "current_answer": "",
         "final_answer": None,
         "needs_more_research": True,
