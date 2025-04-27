@@ -2,6 +2,8 @@ import os
 import streamlit as st
 import sys
 from typing import Dict, Any, Optional, List
+import json
+from datetime import datetime
 
 # Add project root to Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -21,6 +23,115 @@ st.set_page_config(
     page_icon="🔍",
     layout="wide",
     initial_sidebar_state="expanded"
+)
+
+# Add custom CSS first to ensure it's loaded before content
+st.markdown(
+    """
+    <style>
+    /* Force the main content area to maintain width */
+    .main > div {
+        max-width: 1200px !important;
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+    }
+
+    /* Ensure consistent sidebar width */
+    .css-1d391kg {
+        width: 14rem !important;
+    }
+
+    /* Main container styles */
+    .stApp {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    /* Prevent content from causing container to shift */
+    .block-container {
+        max-width: 1200px;
+        padding: 2rem 1rem;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+
+    /* Form container styles */
+    .stForm {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Text area consistent sizing */
+    .stTextArea textarea {
+        min-height: 100px;
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    /* Column container styles */
+    .row-widget.stHorizontal {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 1rem;
+        width: 100%;
+    }
+
+    .row-widget.stHorizontal > div {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    /* Headers */
+    h1, h2, h3 {
+        color: #1E4175;
+        margin: 1rem 0;
+        width: 100%;
+    }
+
+    /* Button styles */
+    .stButton button {
+        background-color: #1E4175;
+        color: white;
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+
+    /* Download button exception */
+    .stDownloadButton button {
+        width: auto;
+        margin: 1rem 0;
+        padding: 0.5rem 1rem;
+    }
+
+    /* Progress bar */
+    .stProgress .st-bo {
+        background-color: #1E4175;
+    }
+
+    /* Prevent horizontal scroll */
+    .element-container {
+        width: 100% !important;
+        overflow-x: hidden;
+    }
+
+    /* Ensure markdown containers don't cause shifts */
+    .stMarkdown {
+        width: 100% !important;
+    }
+
+    /* Tab container styles */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 1rem;
+        width: 100%;
+    }
+
+    .stTabs [data-baseweb="tab-panel"] {
+        width: 100%;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
 )
 
 # App title
@@ -63,7 +174,7 @@ with tab1:
         with col1:
             use_rag = st.checkbox(
                 "Use RAG (Retrieval-Augmented Generation)", 
-                value=config.rag_config.enabled,
+                value=False,
                 help="Enhance the research with knowledge from your document collection"
             )
         
@@ -78,7 +189,7 @@ with tab1:
         submitted = st.form_submit_button("Start Research")
         
         if submitted and question:
-            # Store the collection name
+            # Store the collection name only if RAG is enabled
             if use_rag and rag_collection:
                 st.session_state.rag_collection = rag_collection
             
@@ -92,7 +203,7 @@ with tab1:
             # Run research with progress indicator
             with st.spinner("Researching your question..."):
                 if use_rag:
-                    # Run RAG agent
+                    # Run RAG agent only when RAG is enabled
                     answer, state = run_rag_agent(
                         question=question,
                         collection_name=st.session_state.rag_collection
@@ -126,6 +237,22 @@ with tab1:
                     # Display answer
                     st.markdown("## Research Results")
                     st.markdown(state.get("final_answer", answer))
+
+    # Add download button outside the form
+    if st.session_state.research_state:
+        final_answer = st.session_state.research_state.get("final_answer", "")
+        if final_answer:
+            current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"research_results_{current_time}.txt"
+            
+            # Create download button
+            st.download_button(
+                label="📥 Download Results",
+                data=final_answer,
+                file_name=filename,
+                mime="text/plain",
+                help="Download the research results as a text file"
+            )
     
     # Visualization of the research process
     if st.session_state.research_state:
@@ -133,8 +260,11 @@ with tab1:
         render_graph_visualization(st.session_state.research_state)
 
 with tab2:
-    # Document management for RAG
-    render_document_manager(collection_name=st.session_state.rag_collection)
+    # Only render document management tab if RAG is enabled
+    if use_rag:
+        render_document_manager(collection_name=st.session_state.rag_collection)
+    else:
+        st.info("Enable RAG in the Research Agent tab to manage documents.")
 
 # Email sender form (if needed)
 if st.session_state.research_state and st.session_state.research_state.get("final_answer"):
@@ -152,33 +282,6 @@ st.markdown(
     <div style="text-align: center; color: #888;">
     Built using LangChain, LangGraph, and Streamlit
     </div>
-    """,
-    unsafe_allow_html=True
-)
-
-# Add custom CSS
-st.markdown(
-    """
-    <style>
-    .stApp {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    .main .block-container {
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-    }
-    h1, h2, h3 {
-        color: #1E4175;
-    }
-    .stButton button {
-        background-color: #1E4175;
-        color: white;
-    }
-    .stProgress .st-bo {
-        background-color: #1E4175;
-    }
-    </style>
     """,
     unsafe_allow_html=True
 )
