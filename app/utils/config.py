@@ -8,7 +8,7 @@ load_dotenv()
 
 class WebSearchConfig(BaseModel):
     use_serpapi: bool = Field(default=True, description="Use SerpAPI for web search")
-    use_duckduckgo: bool = Field(default=False, description="Use DuckDuckGo for web search")
+    use_duckduckgo: bool = Field(default=True, description="Use DuckDuckGo for web search")
     use_tavily: bool = Field(default=False, description="Use Tavily for web search")
 
 class SearchConfig(BaseModel):
