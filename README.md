@@ -2,6 +2,8 @@
 
 Deep Researcher is a powerful research agent built with LangChain and LangGraph that helps you conduct comprehensive research on any topic by leveraging multiple data sources.
 
+![homepage](assets/homepage.png)
+
 ## Features
 
 - Answer research queries using AI-powered reasoning
