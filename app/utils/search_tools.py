@@ -12,6 +12,7 @@ from langchain.tools import tool
 from langchain_community.utilities import SerpAPIWrapper
 from duckduckgo_search import DDGS
 from tavily import TavilyClient
+from googleapiclient.discovery import build
 
 from app.utils.config import config
 
@@ -156,6 +157,35 @@ def search_google_scholar(query: str, max_results: int = 5) -> List[Dict[str, st
 # YouTube Video Search
 def search_youtube(query: str, max_results: int = 3) -> List[Dict[str, str]]:
     """Search for videos on YouTube and return results."""
+    # Try using YouTube Data API v3 if configured
+    if config.is_api_configured("youtube"):
+        try:
+            youtube = build('youtube', 'v3', developerKey=config.youtube_api_key)
+            request = youtube.search().list(
+                q=query,
+                part='snippet',
+                type='video',
+                maxResults=max_results
+            )
+            response = request.execute()
+            
+            results = []
+            for item in response.get('items', []):
+                video_id = item['id']['videoId']
+                results.append({
+                    "title": item['snippet']['title'],
+                    "channel": item['snippet']['channelTitle'],
+                    "description": item['snippet']['description'],
+                    "link": f"https://www.youtube.com/watch?v={video_id}",
+                    "publish_date": item['snippet']['publishedAt'],
+                    "source": "youtube"
+                })
+            return results
+        except Exception as e:
+            print(f"Error using YouTube Data API: {str(e)}")
+            # Fall back to pytube if API fails
+    
+    # Fall back to pytube if no API key or API failed
     try:
         search = YouTubeSearch(query)
         results = []

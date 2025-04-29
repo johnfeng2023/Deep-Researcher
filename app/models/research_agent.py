@@ -201,9 +201,20 @@ def process_youtube_search(state: ResearchState) -> ResearchState:
             formatted_result += f"### {video['title']}\n\n"
             # Extract video ID and create embedded player
             video_id = video['link'].split('v=')[-1].split('&')[0]  # Handle URLs with additional parameters
-            formatted_result += f'<iframe width="560" height="315" src="https://www.youtube.com/embed/{video_id}" frameborder="0" allowfullscreen></iframe>\n\n'
+            # Use a div wrapper with custom styling for responsive iframe
+            formatted_result += f"""
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #F1F1F1;">
+  <iframe
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+    src="https://www.youtube.com/embed/{video_id}"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+  ></iframe>
+</div>
+"""
             if video.get('description'):
-                formatted_result += f"{video['description']}\n\n"
+                formatted_result += f"\n{video['description']}\n\n"
             formatted_result += "---\n\n"
     else:
         formatted_result += "*No relevant videos found for this query.*\n\n"
@@ -321,6 +332,7 @@ def create_final_summary(state: ResearchState) -> ResearchState:
     
     # Add all search results and reflections
     for log in state["search_logs"]:
+        # Preserve HTML content in the organized content
         organized_content += log["results"] + "\n\n"
     
     # Generate the final analysis

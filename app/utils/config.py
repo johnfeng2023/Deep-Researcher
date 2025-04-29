@@ -39,6 +39,7 @@ class Config(BaseModel):
     # API Keys
     serpapi_api_key: str = Field(default_factory=lambda: os.getenv("SERPAPI_API_KEY", ""))
     tavily_api_key: str = Field(default_factory=lambda: os.getenv("TAVILY_API_KEY", ""))
+    youtube_api_key: str = Field(default_factory=lambda: os.getenv("YOUTUBE_API_KEY", ""))
     twitter_api_key: str = Field(default_factory=lambda: os.getenv("TWITTER_API_KEY", ""))
     twitter_api_secret: str = Field(default_factory=lambda: os.getenv("TWITTER_API_SECRET", ""))
     twitter_access_token: str = Field(default_factory=lambda: os.getenv("TWITTER_ACCESS_TOKEN", ""))
@@ -73,6 +74,8 @@ class Config(BaseModel):
             return bool(self.serpapi_api_key)
         elif api_name == "tavily":
             return bool(self.tavily_api_key)
+        elif api_name == "youtube":
+            return bool(self.youtube_api_key)
         elif api_name == "twitter":
             return all([
                 self.twitter_api_key,
