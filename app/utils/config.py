@@ -10,6 +10,7 @@ class WebSearchConfig(BaseModel):
     use_serpapi: bool = Field(default=True, description="Use SerpAPI for web search")
     use_duckduckgo: bool = Field(default=True, description="Use DuckDuckGo for web search")
     use_tavily: bool = Field(default=False, description="Use Tavily for web search")
+    use_firecrawl: bool = Field(default=False, description="Use Firecrawl for deep web search")
 
 class SearchConfig(BaseModel):
     web_search_enabled: bool = Field(default=True, description="Enable web search using SerpAPI")
@@ -45,6 +46,7 @@ class Config(BaseModel):
     twitter_access_token_secret: str = Field(default_factory=lambda: os.getenv("TWITTER_ACCESS_TOKEN_SECRET", ""))
     linkedin_username: str = Field(default_factory=lambda: os.getenv("LINKEDIN_USERNAME", ""))
     linkedin_password: str = Field(default_factory=lambda: os.getenv("LINKEDIN_PASSWORD", ""))
+    firecrawl_api_key: str = Field(default_factory=lambda: os.getenv("FIRECRAWL_API_KEY", ""), description="Firecrawl API key")
     
     # LLM Config
     ollama_model: str = "gemma3:1b"
@@ -82,6 +84,8 @@ class Config(BaseModel):
             ])
         elif api_name == "linkedin":
             return bool(self.linkedin_username and self.linkedin_password)
+        elif api_name == "firecrawl":
+            return bool(self.firecrawl_api_key)
         elif api_name == "email":
             return all([
                 self.email_config.username,

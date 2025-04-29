@@ -33,6 +33,8 @@ def render_sidebar() -> Dict[str, bool]:
             with col2:
                 duckduckgo_search = st.checkbox("DuckDuckGo", value=config.search_config.web_search_config.use_duckduckgo,
                                              help="Use DuckDuckGo for web search")
+                firecrawl_search = st.checkbox("Firecrawl (MCP)", value=config.search_config.web_search_config.use_firecrawl,
+                                            help="Use Firecrawl for deep web search")
             
             # API configuration warnings for web search
             if serpapi_search and not config.is_api_configured("serpapi"):
@@ -40,6 +42,9 @@ def render_sidebar() -> Dict[str, bool]:
             
             if tavily_search and not config.is_api_configured("tavily"):
                 st.warning("⚠️ Tavily API key not configured. Tavily search may not work.")
+                
+            if firecrawl_search and not config.is_api_configured("firecrawl"):
+                st.warning("⚠️ Firecrawl API key not configured. Firecrawl search may not work.")
         
         st.write("---")
         st.subheader("Academic Sources")
@@ -85,6 +90,7 @@ def render_sidebar() -> Dict[str, bool]:
         - LangChain & LangGraph
         - Ollama (gemma3:1b)
         - Streamlit
+        - MCP Firecrawl (optional)
         
         [View on GitHub](https://github.com/Sallyliubj/Deep-Researcher)
         """)
@@ -99,5 +105,6 @@ def render_sidebar() -> Dict[str, bool]:
         "linkedin_search_enabled": linkedin_search,
         "web_search_config_use_serpapi": serpapi_search if web_search else False,
         "web_search_config_use_duckduckgo": duckduckgo_search if web_search else False,
-        "web_search_config_use_tavily": tavily_search if web_search else False
+        "web_search_config_use_tavily": tavily_search if web_search else False,
+        "web_search_config_use_firecrawl": firecrawl_search if web_search else False
     } 

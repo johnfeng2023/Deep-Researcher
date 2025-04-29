@@ -270,7 +270,7 @@ def search_linkedin(query: str, max_results: int = 5) -> List[Dict[str, str]]:
 # Create LangChain tools
 @tool
 def web_search(query: str) -> str:
-    """Search the web for information on the given query."""
+    """Search the web for information."""
     if not config.search_config.web_search_enabled:
         return "Web search is disabled."
     
@@ -307,6 +307,37 @@ def web_search(query: str) -> str:
                 errors.append(f"Error with Tavily search: {str(e)}")
         else:
             errors.append("Tavily API key is not configured.")
+            
+    # Firecrawl Search
+    if config.search_config.web_search_config.use_firecrawl:
+        if config.is_api_configured("firecrawl"):
+            try:
+                from mcp_firecrawl_firecrawl import deep_research
+                # Set environment variable for Firecrawl
+                os.environ["FIRECRAWL_API_KEY"] = config.firecrawl_api_key
+                
+                firecrawl_results = deep_research(
+                    query=query,
+                    maxUrls=config.max_search_results,
+                    maxDepth=2,  # Conservative depth for regular search
+                    timeLimit=60  # 1 minute timeout
+                )
+                
+                if isinstance(firecrawl_results, dict):
+                    # Extract sources from Firecrawl results
+                    if "sources" in firecrawl_results:
+                        for source in firecrawl_results["sources"]:
+                            if isinstance(source, dict):
+                                results.append({
+                                    "title": source.get("title", "Untitled"),
+                                    "link": source.get("url", ""),
+                                    "snippet": source.get("snippet", ""),
+                                    "source": "Firecrawl"
+                                })
+            except Exception as e:
+                errors.append(f"Error with Firecrawl search: {str(e)}")
+        else:
+            errors.append("Firecrawl API key is not configured.")
     
     if not results:
         error_message = "\n".join(errors) if errors else "No web search results found."
