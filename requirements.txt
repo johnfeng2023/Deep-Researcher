@@ -12,6 +12,7 @@ langchain-community>=0.0.20
 
 # Search tools
 google-search-results>=2.4.2  # SerpAPI
+google-api-python-client>=2.0.0  # YouTube Data API v3
 langchain_openai>=0.0.3
 duckduckgo-search>=4.1.1  # DuckDuckGo search
 tavily-python>=0.2.6  # Tavily search API
