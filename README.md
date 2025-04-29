@@ -1,8 +1,10 @@
-# Deep Researcher
+# 🔍 Deep Researcher
 
 Deep Researcher is a powerful research agent built with LangChain and LangGraph that helps you conduct comprehensive research on any topic by leveraging multiple data sources.
 
-## Features
+![homepage](assets/homepage.png)
+
+## 💡 Features
 
 - Answer research queries using AI-powered reasoning
 - Search the web using multiple search engines:
@@ -17,7 +19,7 @@ Deep Researcher is a powerful research agent built with LangChain and LangGraph 
 - Interactive visualization of the agent's reasoning process
 - Customizable search options - enable/disable specific search features
 
-## Installation
+## 🔧 Installation
 
 For detailed installation instructions and troubleshooting tips, please see the [Installation Guide](INSTALLATION.md).
 
@@ -51,7 +53,7 @@ ollama pull gemma3:1b
 
 5. Create a `.env` file in the root directory with your API keys (see `.env.example`).
 
-## Usage
+## 🔭 Usage
 
 1. Start the Streamlit app:
 ```bash
@@ -69,7 +71,7 @@ Or use the provided shell script:
 
 4. View the results, LangGraph visualization, and send the results to an email if desired
 
-## Web Search Options
+## 🌐 Web Search Options
 
 Deep Researcher offers multiple web search options:
 
@@ -79,7 +81,7 @@ Deep Researcher offers multiple web search options:
 
 You can enable or disable any of these search engines from the sidebar.
 
-## Architecture
+## 🧩 Architecture
 
 This project uses:
 - LangChain for orchestrating the various AI components and tools

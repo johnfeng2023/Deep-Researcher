@@ -143,9 +143,12 @@ def render_execution_steps(state: Dict[str, Any]) -> None:
                             else:
                                 # If the section doesn't match the expected format, display as is
                                 st.markdown(section)
+                    # For YouTube results, ensure HTML is rendered
+                    elif log["source"] == "youtube":
+                        st.markdown(log["results"], unsafe_allow_html=True)
                     else:
                         # For other sources, show formatted results
-                        st.markdown(log["results"])
+                        st.markdown(log["results"], unsafe_allow_html=True)
         
         with overview_tab:
             steps_data = []

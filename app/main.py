@@ -154,6 +154,9 @@ if "research_done" not in st.session_state:
 if "research_state" not in st.session_state:
     st.session_state.research_state = None
 
+if "research_answer" not in st.session_state:
+    st.session_state.research_answer = None
+
 if "rag_collection" not in st.session_state:
     st.session_state.rag_collection = "default"
 
@@ -214,21 +217,11 @@ with tab1:
                         collection_name=st.session_state.rag_collection
                     )
                     
-                    # Store state for visualization
+                    # Store state and answer in session state
                     st.session_state.research_state = state
+                    st.session_state.research_answer = answer
+                    st.session_state.research_done = True
                     
-                    # Display answer
-                    st.markdown("## Research Results")
-                    st.markdown(answer)
-                    
-                    # Display retrieved documents
-                    st.markdown("## Retrieved Documents")
-                    for i, doc in enumerate(state.get("retrieved_docs", []), 1):
-                        source = doc.get("metadata", {}).get("source", "Unknown source")
-                        st.markdown(f"### {i}. {source}")
-                        
-                        with st.expander("Show content"):
-                            st.markdown(doc.get("content", "No content available"))
                 else:
                     # Run regular research agent
                     answer, state = run_research_agent(
@@ -236,31 +229,42 @@ with tab1:
                         search_config=search_config
                     )
                     
-                    # Store state for visualization
+                    # Store state and answer in session state
                     st.session_state.research_state = state
-                    
-                    # Display answer
-                    st.markdown("## Research Results")
-                    st.markdown(state.get("final_answer", answer))
+                    st.session_state.research_answer = answer
+                    st.session_state.research_done = True
 
-    # Add download button outside the form
-    if st.session_state.research_state:
-        final_answer = st.session_state.research_state.get("final_answer", "")
-        if final_answer:
+    # Display results if research is done
+    if st.session_state.research_done and st.session_state.research_state:
+        # Display answer
+        st.markdown("## Research Results")
+        st.markdown(st.session_state.research_answer, unsafe_allow_html=True)
+        
+        # Display retrieved documents for RAG
+        if use_rag:
+            st.markdown("## Retrieved Documents")
+            for i, doc in enumerate(st.session_state.research_state.get("retrieved_docs", []), 1):
+                source = doc.get("metadata", {}).get("source", "Unknown source")
+                st.markdown(f"### {i}. {source}")
+                
+                with st.expander("Show content"):
+                    st.markdown(doc.get("content", "No content available"), unsafe_allow_html=True)
+        
+        # Add download button
+        if st.session_state.research_answer:
             current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"research_results_{current_time}.txt"
             
             # Create download button
             st.download_button(
                 label="📥 Download Results",
-                data=final_answer,
+                data=st.session_state.research_answer,
                 file_name=filename,
                 mime="text/plain",
                 help="Download the research results as a text file"
             )
-    
-    # Visualization of the research process
-    if st.session_state.research_state:
+        
+        # Visualization of the research process
         st.markdown("---")
         render_graph_visualization(st.session_state.research_state)
 
@@ -272,12 +276,12 @@ with tab2:
         st.info("Enable RAG in the Research Agent tab to manage documents.")
 
 # Email sender form (if needed)
-if st.session_state.research_state and st.session_state.research_state.get("final_answer"):
+if st.session_state.research_done and st.session_state.research_answer:
     st.markdown("---")
     with st.expander("📧 Email Research Results"):
         render_email_form(
             st.session_state.research_state.get("question", ""),
-            st.session_state.research_state.get("final_answer", "")
+            st.session_state.research_answer
         )
 
 # Footer
