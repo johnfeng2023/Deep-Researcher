@@ -301,11 +301,19 @@ Potential areas for enhancement include:
 - FAISS Vector Database: https://github.com/facebookresearch/faiss
 - Streamlit Documentation: https://docs.streamlit.io/
 - 
-### Results Video Demo:
-Search agent demo: https://www.youtube.com/watch?v=YklrWpmjqpU
-<img width="569" alt="Screenshot 2025-05-01 at 5 10 31 PM" src="https://github.com/user-attachments/assets/f155b55a-d391-4f2a-b3a4-ea08901275b8" />
-Rag demo: https://www.youtube.com/watch?v=CvVQr5Tqkv8&embeds_referring_euri=https%3A%2F%2Fdocs.google.com%2F&embeds_referring_origin=https%3A%2F%2Fdocs.google.com&source_ve_path=MjM4NTE
-MCP demo: https://www.youtube.com/watch?v=cThGqxrcEa4&embeds_referring_euri=https%3A%2F%2Fdocs.google.com%2F&embeds_referring_origin=https%3A%2F%2Fdocs.google.com&source_ve_path=MjM4NTE
+## Video Demonstrations
+
+### Search Agent Demo
+[![Search Agent Demo](https://img.youtube.com/vi/YklrWpmjqpU/0.jpg)](https://www.youtube.com/watch?v=YklrWpmjqpU)
+
+### System Overview
+<img width="569" alt="Screenshot 2025-05-01 at 5 10 31 PM" src="https://github.com/user-attachments/assets/f155b55a-d391-4f2a-b3a4-ea08901275b8" />
+
+### RAG Implementation Demo
+[![RAG Demo](https://img.youtube.com/vi/CvVQr5Tqkv8/0.jpg)](https://www.youtube.com/watch?v=CvVQr5Tqkv8)
+
+### MCP Demo
+[![MCP Demo](https://img.youtube.com/vi/cThGqxrcEa4/0.jpg)](https://www.youtube.com/watch?v=cThGqxrcEa4)
 
 
 
