@@ -300,3 +300,12 @@ Potential areas for enhancement include:
 - Ollama Project: https://github.com/ollama/ollama
 - FAISS Vector Database: https://github.com/facebookresearch/faiss
 - Streamlit Documentation: https://docs.streamlit.io/
+- 
+### Results Video Demo:
+Search agent demo: https://www.youtube.com/watch?v=YklrWpmjqpU
+<img width="569" alt="Screenshot 2025-05-01 at 5 10 31 PM" src="https://github.com/user-attachments/assets/f155b55a-d391-4f2a-b3a4-ea08901275b8" />
+Rag demo: https://www.youtube.com/watch?v=CvVQr5Tqkv8&embeds_referring_euri=https%3A%2F%2Fdocs.google.com%2F&embeds_referring_origin=https%3A%2F%2Fdocs.google.com&source_ve_path=MjM4NTE
+MCP demo: https://www.youtube.com/watch?v=cThGqxrcEa4&embeds_referring_euri=https%3A%2F%2Fdocs.google.com%2F&embeds_referring_origin=https%3A%2F%2Fdocs.google.com&source_ve_path=MjM4NTE
+
+
+
