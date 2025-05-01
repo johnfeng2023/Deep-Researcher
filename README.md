@@ -91,13 +91,16 @@ This project uses:
 
 ## Project Report
 This report is on our Deep Researcher project.  We created an advanced research assistant system that uses artificial intelligence to conduct multi source research. We integrated large language models with various search tools and databases for a novel approach to automated scholarly research. The system has significant capabilities in processing complex research queries, gathers information from diverse sources, and synthesizes coherent research summaries with a simple interface.
+
 1. Introduction and Scope
+
 1.1 Problem Statement
 Conducting research requires navigating vast amounts of information spread across many platforms, including academic databases, web search engines, video platforms, and social media. The fragmented nature of this information landscape poses significant challenges:
 Time-intensive manual search processes across multiple platforms
 Difficulty in synthesizing information from heterogeneous sources
 Inefficient evaluation of source relevance and reliability
 Limited ability to process large volumes of information efficiently
+
 1.2 Project Goals and Objectives
 We developed Deep Researcher to address these challenges with the following objectives:
 Create an autonomous research agent capable of conducting comprehensive research across multiple information sources
@@ -106,7 +109,9 @@ Develop an integrated search system spanning academic databases, web search engi
 Incorporate local document processing capabilities to include user-provided information in the research process
 Present research findings in a clear, coherent format with proper attribution and supporting evidence
 Provide an intuitive user interface allowing researchers to configure search parameters and visualize the research process
+
 2. Methodological Approach
+ 
 2.1 System Architecture Design
 The Deep Researcher system was designed with a modular architecture centered around a state based research workflow. The core components include:
 Research Agent: A LangGraph-powered state machine that orchestrates the research process
@@ -114,6 +119,7 @@ Search Tools: Modular components providing access to various information sources
 Document Processing System: Tools for extracting and processing information from local documents
 RAG System: A retrieval-augmented generation system for integrating local knowledge
 User Interface: A Streamlit-based interface for configuration and visualization
+
 2.2 Development Process
 The development followed an iterative approach with these key phases:
 Requirement Analysis: Identifying essential information sources and research capabilities
@@ -122,6 +128,7 @@ Workflow Design: Designing the research agent's state graph and decision process
 Integration: Connecting components through the LangChain framework
 User Interface Development: Creating an intuitive Streamlit interface
 Testing and Refinement: Iterative testing with diverse research queries
+
 2.3 Research Agent Implementation
 The research agent was implemented as a directed state graph using LangGraph with the following key states:
 Query Analysis: Understanding the research question and formulating search strategies
@@ -130,7 +137,9 @@ Information Gathering: Executing searches across selected platforms
 Reflection: Evaluating gathered information to identify knowledge gaps
 Synthesis: Generating a comprehensive research summary
 The agent employs self-reflection mechanisms to evaluate information quality, identify gaps, and decide when sufficient information has been gathered to answer the research question.
+
 3. Technical Implementation
+4. 
 3.1 Core Technologies
 The system leverages several key technologies:
 LangChain: Provides the foundation for connecting language models with external tools
@@ -138,70 +147,79 @@ LangGraph: Enables the creation of a stateful agent with reasoning capabilities
 Ollama/Gemma 3: Provides local LLM inference capabilities
 FAISS: Powers the vector database for document retrieval
 Streamlit: Creates the web-based user interface
+
 3.2 Search Integration
 The system integrates multiple search capabilities:
 Web Search:
-SerpAPI for Google search results
-DuckDuckGo for privacy-focused search
-Tavily for AI-optimized research queries
-Academic Sources:
-arXiv for scientific papers
-Google Scholar for academic publications
-Multimedia Sources:
-YouTube for video content
-Social Media:
-Twitter/X for current discussions
-LinkedIn for professional insights
+ - SerpAPI for Google search results
+ - DuckDuckGo for privacy-focused search
+ - Tavily for AI-optimized research queries
+ - Academic Sources:
+ - arXiv for scientific papers
+ - Google Scholar for academic publications
+ - Multimedia Sources:
+ - YouTube for video content
+ - Social Media:
+ - Twitter/X for current discussions
+ - LinkedIn for professional insights
 Each search tool was implemented as a LangChain tool using appropriate APIs or web scraping techniques where necessary.
+
 3.3 Document Processing System
 The document processing system supports:
-Multiple file formats (PDF, DOCX, TXT, MD, CSV)
-Automatic text extraction
-Chunking for efficient embedding
-Vector-based similarity search
+- Multiple file formats (PDF, DOCX, TXT, MD, CSV)
+- Automatic text extraction
+- Chunking for efficient embedding
+- Vector based similarity search
+- 
 3.4 RAG Implementation
 The RAG (Retrieval-Augmented Generation) system:
-Processes uploaded documents into text chunks
-Creates embeddings using the all-MiniLM-L6-v2 model
-Stores embeddings in a FAISS vector database
-Retrieves contextually relevant information during research
-Integrates retrieved information into the research process
+- Processes uploaded documents into text chunks
+- Creates embeddings using the all-MiniLM-L6-v2 model
+- Stores embeddings in a FAISS vector database
+- Retrieves contextually relevant information during research
+- Integrates retrieved information into the research process
+
 4. Results and Findings
+
 4.1 Research Capability Assessment
 The Deep Researcher system demonstrated strong capabilities in:
-Comprehensive Research: Successfully gathering information from multiple sources for diverse queries
-Information Synthesis: Creating coherent summaries that integrate findings across sources
-Self-Reflection: Effectively identifying knowledge gaps and adjusting search strategies
-Source Citation: Properly attributing information to original sources
+- Comprehensive Research: Successfully gathering information from multiple sources for diverse queries
+- Information Synthesis: Creating coherent summaries that integrate findings across sources
+- Self-Reflection: Effectively identifying knowledge gaps and adjusting search strategies
+- Source Citation: Properly attributing information to original sources
+
 4.2 Performance Characteristics
 Key performance characteristics include:
 Response Time: Typically 2-5 minutes for comprehensive research, depending on query complexity
 Information Diversity: Successfully integrates information from 3-7 distinct sources per query
 Accuracy: High relevance of retrieved information, with appropriate citations and source tracking
+
 4.3 User Experience
 The Streamlit interface provides:
-Intuitive query input
-Configurable search options
-Real-time visualization of the research process
-Clear presentation of results with source attribution
-Email functionality for sharing results
+- Intuitive query input
+- Configurable search options
+- Real-time visualization of the research process
+- Clear presentation of results with source attribution
+- Email functionality for sharing results
+  
 5. Challenges and Solutions
 5.1 Technical Challenges
-API Rate Limiting:
-Challenge: Search APIs often impose rate limits
-Solution: Implemented rate limiting, caching, and fallback mechanisms
-API Costs:
-Challenge: Some social media API’s require payment to access
-Solution: Implemented the infrastructure for such API’s without subscribing to the actual platform
-Local LLM Performance:
-Challenge: Local LLMs have lower performance than cloud-based alternatives
-Solution: Carefully engineered prompts and implemented a reflection mechanism to compensate for limitations
-RAG Quality Issues:
-Challenge: Document chunking and retrieval sometimes missed contextual information
-Solution: Optimized chunk size and overlap parameters, implemented semantic search improvements
-Integration Complexity:
-Challenge: Coordinating multiple search tools within a coherent workflow
-Solution: LangGraph-based state management with conditional transitions
+- API Rate Limiting:
+  - Challenge: Search APIs often impose rate limits
+  - Solution: Implemented rate limiting, caching, and fallback mechanisms
+- API Costs:
+  - Challenge: Some social media API’s require payment to access
+  - Solution: Implemented the infrastructure for such API’s without subscribing to the actual platform
+- Local LLM Performance:
+  - Challenge: Local LLMs have lower performance than cloud-based alternatives
+  - Solution: Carefully engineered prompts and implemented a reflection mechanism to compensate for limitations
+- RAG Quality Issues:
+  - Challenge: Document chunking and retrieval sometimes missed contextual information
+  - Solution: Optimized chunk size and overlap parameters, implemented semantic search improvements
+- Integration Complexity:
+  - Challenge: Coordinating multiple search tools within a coherent workflow
+  - Solution: LangGraph-based state management with conditional transitions
+  - 
 5.2 Research Quality Challenges
 Information Synthesis:
 Challenge: Creating coherent narratives from heterogeneous sources
@@ -212,7 +230,7 @@ Solution: Added a query refinement step that tailors queries to each search plat
 Source Reliability:
 Challenge: Evaluating the reliability of diverse information sources
 Solution: Implemented source credibility assessment within the reflection stage
-6. Conclusion and Future Work
+8. Conclusion and Future Work
 6.1 Achievements
 The Deep Researcher project successfully created an autonomous research agent capable of:
 Conducting comprehensive research across multiple information sources
@@ -232,7 +250,7 @@ Expanded Academic Access: Integration with additional academic databases
 Multi-Modal Research: Better processing of image and video content
 Collaborative Research: Adding capabilities for multiple users to contribute to research
 Knowledge Base Building: Creating persistent research memory across sessions
-7. Main References
+9. Main References
 LangChain Documentation: https://python.langchain.com/docs/
 LangGraph Documentation: https://langchain-ai.github.io/langgraph/
 Ollama Project: https://github.com/ollama/ollama
