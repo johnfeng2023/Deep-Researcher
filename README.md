@@ -326,6 +326,6 @@ Potential areas for enhancement include:
 ### MCP Demo
 [![MCP Demo](https://img.youtube.com/vi/cThGqxrcEa4/0.jpg)](https://www.youtube.com/watch?v=cThGqxrcEa4)
 
-
+---
 This project is licensed under the PolyForm Noncommercial License 1.0.0 – see the LICENSE file for details.
 
