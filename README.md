@@ -88,6 +88,8 @@ This project uses:
 - LangGraph for creating a dynamic research workflow with self-reflection capabilities
 - Ollama (gemma3:1b) for local AI model inference
 - Streamlit for the web interface
+
+<! --
 # Deep Researcher
 
 An advanced research assistant system that uses artificial intelligence to conduct multi source research, integrating large language models with various search tools and databases for automated scholarly research.
@@ -304,15 +306,17 @@ Potential areas for enhancement include:
 - **Collaborative Research**: Adding capabilities for multiple users to contribute to research
 - **Knowledge Base Building**: Creating persistent research memory across sessions
 
-## Main References
+## References
 
 - LangChain Documentation: https://python.langchain.com/docs/
 - LangGraph Documentation: https://langchain-ai.github.io/langgraph/
 - Ollama Project: https://github.com/ollama/ollama
 - FAISS Vector Database: https://github.com/facebookresearch/faiss
 - Streamlit Documentation: https://docs.streamlit.io/
-- 
-## Video Demonstrations
+
+-->
+
+## 📺 Video Demonstrations
 
 ### Search Agent Demo
 [![Search Agent Demo](https://img.youtube.com/vi/YklrWpmjqpU/0.jpg)](https://www.youtube.com/watch?v=YklrWpmjqpU)
