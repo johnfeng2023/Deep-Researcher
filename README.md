@@ -89,7 +89,7 @@ This project uses:
 - Ollama (gemma3:1b) for local AI model inference
 - Streamlit for the web interface
 
-<! --
+<!--- 
 # Deep Researcher
 
 An advanced research assistant system that uses artificial intelligence to conduct multi source research, integrating large language models with various search tools and databases for automated scholarly research.
@@ -313,7 +313,6 @@ Potential areas for enhancement include:
 - Ollama Project: https://github.com/ollama/ollama
 - FAISS Vector Database: https://github.com/facebookresearch/faiss
 - Streamlit Documentation: https://docs.streamlit.io/
-
 -->
 
 ## 📺 Video Demonstrations
