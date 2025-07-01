@@ -27,7 +27,7 @@ Quick start:
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/Sallyliubj/Deep-Researcher.git
+git clone https://github.com/johnfeng2023/Deep-Researcher.git
 cd Deep-Researcher
 ```
 
